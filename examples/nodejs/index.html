@@ -1,0 +1,45 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd"> 
+<html>
+<head>
+<title>Download test</title>
+</head>
+<body>
+
+<script src="/js"></script>
+
+<center>
+<a href="#" onclick="dl.download();">Download</a> <b> | </b>
+<a href="#" onclick="dl.pause();">Pause</a> <b> | </b>
+<a href="#" onclick="dl.resume();">Resume</a> <b> | </b>
+<a href="#" onclick="dl.abort();">Abort</a>
+</center>
+<br />
+<center><progress id="progress" value="0" max="100"></progress><span id="percent">0 %</span></center>
+<center><a href="#" id="download" download="test.txt" hidden>Copy file</a></center>
+
+<script>
+
+var progress = document.getElementById("progress");
+var download = document.getElementById("download");
+var percent = document.getElementById("percent");
+var dl = new Downloader("/download", "test");
+dl.onFinish(function(url) {
+	download.setAttribute("href", url);
+	download.removeAttribute("hidden");
+});
+
+dl.onProgress(function(bytes, total) {
+	percent.innerHTML = " " + parseInt((bytes/total)*100) + " %";
+	progress.setAttribute("value", bytes);
+	progress.setAttribute("max", total);
+});
+
+dl.onError(function(code) {
+	dl.pause();
+	alert("Error: " + code);
+});
+
+</script>
+
+</body>
+</html>
